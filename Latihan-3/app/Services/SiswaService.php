@@ -2,36 +2,16 @@
 
 namespace App\Services;
 
-use App\Exceptions\SiswaNotFoundException;
-use App\Interfaces\SiswaRepositoryInterface;
+use App\Handlers\SiswaHandler;
 
 class SiswaService
 {
-    public function __construct(private SiswaRepositoryInterface $repository) {}
-
-    public function getAllSiswa()
-    {
-        return $this->repository->getAll();
-    }
-
-    public function getSiswaById(int $id)
-    {
-        $siswa = $this->repository->findById($id);
-        if (!$siswa) {
-            throw new SiswaNotFoundException();
-        }
-        return $siswa;
-    }
+    public function __construct(private SiswaHandler $handler) {}
 
     public function tambahSiswa(array $data)
     {
-        if (!isset($data['nilai'])) {
-            throw new \InvalidArgumentException(
-                'Nilai wajib diisi.'
-            );
-        }
-        $this->validasiNilai((int) $data['nilai']);
-        return $this->repository->create($data);
+        $this->validasiNilai( $data['nilai']);
+        return $this->handler->tambahSiswa($data);
     }
 
     public function tentukanStatus(int $nilai): string
@@ -45,22 +25,14 @@ class SiswaService
     public function updateSiswa(int $id, array $data)
     {
         if (isset($data['nilai'])) {
-            $this->validasiNilai((int) $data['nilai']);
+            $this->validasiNilai($data['nilai']);
         }
-        $siswa = $this->repository->update($id, $data);
-        if (!$siswa) {
-            throw new SiswaNotFoundException();
-        }
-        return $siswa;
+        return $this->handler->updateSiswa($id, $data);
     }
 
     public function hapusSiswa(int $id): bool
     {
-        $siswa = $this->repository->delete($id);
-        if (!$siswa) {
-            throw new SiswaNotFoundException();
-        }
-        return $siswa;
+        return $this->handler->hapusSiswa($id);
     }
 
     private function validasiNilai(int $nilai): void

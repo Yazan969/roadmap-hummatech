@@ -3,24 +3,26 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\SiswaRepository;
 use App\Services\SiswaService;
 use Illuminate\Http\Request;
 
 class SiswaController extends Controller
 {
-    public function __construct(private SiswaService $service)
+    
+    public function __construct(private SiswaService $service,private SiswaRepository $repository)
     {}
 
-    public function index ()
+    public function index()
     {
         return response()->json(
-            $this->service->getAllSiswa()
+            $this->repository->getAll()
         );
     }
 
-    public function show (int $id)
+    public function show(int $id)
     {
-        $siswa = $this->service->getSiswaById($id);
+        $siswa = $this->repository->findById($id);
 
         return response()->json($siswa);
     }
@@ -36,7 +38,7 @@ class SiswaController extends Controller
             'message' => 'Data siswa berhasil di tambahkan',
             'data' => $siswa,
             'status' => $this->service->tentukanStatus(
-                (int) $siswa->nilai
+                $siswa->nilai
             ),
         ], 201);
     }
@@ -58,10 +60,10 @@ class SiswaController extends Controller
 
     public function destroy(int $id)
     {
-        $this->service->hapusSiswa($id);
+        $this->repository->delete($id);
 
         return response()->json([
-            'mesasge' => 'Data siswa berhasil dihapus',
+            'message' => 'Data siswa berhasil dihapus',
         ]);
     }
 }
