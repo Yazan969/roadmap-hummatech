@@ -30,11 +30,6 @@ class SiswaService
         return $this->handler->updateSiswa($id, $data);
     }
 
-    public function hapusSiswa(int $id): bool
-    {
-        return $this->handler->hapusSiswa($id);
-    }
-
     private function validasiNilai(int $nilai): void
     {
         if ($nilai < 0 || $nilai > 100) {

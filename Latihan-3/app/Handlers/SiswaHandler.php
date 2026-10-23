@@ -28,13 +28,4 @@ class SiswaHandler
         return $siswa;
     }
 
-    public function hapusSiswa(int $id): bool
-    {
-        $siswa = $this->repository->delete($id);
-        if (!$siswa) {
-            throw new SiswaNotFoundException();
-        }
-        return $siswa;
-    }
-
 }
