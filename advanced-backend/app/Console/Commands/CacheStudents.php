@@ -30,13 +30,12 @@ class CacheStudents extends Command
             300,
             function () {
                 $this->info('Cache miss: membaca database.');
-
                 return BatchStudent::query()
                     ->select('id', 'nama', 'nilai')
                     ->orderBy('id')
                     ->get()
                     ->toArray();
-            }
+                }
         );
         $this->info('Jumlah siswa: ' . count($students));
         return self::SUCCESS;
