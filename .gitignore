@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+vendor/
+**/vendor/
+node_modules/
+**/node_modules/
