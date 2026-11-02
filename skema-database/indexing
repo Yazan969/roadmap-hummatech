@@ -1,0 +1,4 @@
+SELECT nama, nilai
+FROM siswa
+WHERE kelas_id = 1
+  AND nilai >= 80;
