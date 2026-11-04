@@ -1,0 +1,18 @@
+INSERT INTO siswa (nis, nama, nilai, kelas_id)
+VALUES ('1006', 'Fajar', 88, 1);
+
+SELECT * FROM siswa;
+
+SELECT *
+FROM siswa
+WHERE nilai >= 80;
+
+SELECT nama, nilai
+FROM siswa;
+
+UPDATE siswa
+SET nilai = 95
+WHERE nis = '1001';
+
+DELETE FROM siswa
+WHERE nis = '1006';

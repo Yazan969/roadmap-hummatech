@@ -1,0 +1,9 @@
+SELECT
+    siswa.id,
+    siswa.nis,
+    siswa.nama,
+    siswa.nilai,
+    kelas.nama_kelas
+FROM siswa
+INNER JOIN kelas
+    ON siswa.kelas_id = kelas.id;
