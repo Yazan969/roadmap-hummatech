@@ -25,12 +25,10 @@ class RunAllBackendProcessses extends Command
      */
     public function handle(): int
     {
-         // 1. Jalankan Scheduler untuk tugas yang sudah jatuh tempo.
         if ($this->runStep('Scheduler', 'schedule:run') !== self::SUCCESS) {
             return self::FAILURE;
         }
 
-        // 2. Proses data siswa secara bertahap.
         if ($this->runStep(
             'Batch Processing',
             'app:process-students-batch'
@@ -38,7 +36,6 @@ class RunAllBackendProcessses extends Command
             return self::FAILURE;
         }
 
-        // 3. Simpan atau ambil data siswa melalui Redis Cache.
         if ($this->runStep(
             'Redis Caching',
             'app:cache-students'
@@ -46,7 +43,6 @@ class RunAllBackendProcessses extends Command
             return self::FAILURE;
         }
 
-        // 4. Kirim Job ke antrean.
         if ($this->runStep(
             'Dispatch Message Queue',
             'app:dispatch-students'
@@ -54,7 +50,6 @@ class RunAllBackendProcessses extends Command
             return self::FAILURE;
         }
 
-        // 5. Proses Job yang mengantre, lalu berhenti ketika antrean kosong.
         if ($this->runStep(
             'Queue Worker',
             'queue:work',
@@ -63,7 +58,6 @@ class RunAllBackendProcessses extends Command
             return self::FAILURE;
         }
 
-        // 6. Periksa kondisi backend setelah proses selesai.
         if ($this->runStep(
             'Monitoring',
             'app:monitor-backend'

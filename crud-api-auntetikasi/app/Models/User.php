@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
     ];
@@ -48,7 +48,5 @@ class User extends Authenticatable
         ];
     }
 
-    public function siswa(){
-        return $this->hasOne(Siswa::class);
-    }
+
 }

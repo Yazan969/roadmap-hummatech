@@ -3,79 +3,78 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\SiswaRequest;
 use App\Models\Siswa;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class SiswaController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
         $siswa = Siswa::all();
 
-        return response()->json($siswa);
-    }
-
-    public function show($id)
-    {
-        $siswa = Siswa::find($id);
-
-        return response()-> json($siswa);
-    }
-
-    public function store(Request $request)
-    {
-
-        $request->validate([
-            'name_siswa' => 'required|string',
-            'nilai' => 'required|integer|min:0|max:100'
-        ]);
-
-        $siswa = Siswa::create([
-            'name_siswa' => $request->name_siswa,
-            'nilai' => $request->nilai
-        ]);
-
         return response()->json([
-            'massage'=> 'Data siswa berhasil ditambahkan',
-            'data' => $siswa
-        ], 201);
-        }
+            'data' => $siswa,
+        ], 200);
+    }
 
-    public function update (Request $request, $id)
+    public function show(int $id): JsonResponse
     {
         $siswa = Siswa::find($id);
 
         if (!$siswa) {
             return response()->json([
-                'massage' => 'Data siswa tidak ditemukan'
+                'message' => 'Data siswa tidak ditemukan.',
             ], 404);
         }
 
-        $siswa->update([
-            'nama' => $request->name_siswa,
-            'nilai'=> $request->nilai
-        ]);
-
         return response()->json([
-            'massage'=> 'Data siswa berhasil di ubah',
-            'data'=> $siswa
+            'data' => $siswa,
         ], 200);
     }
 
-    public function destroy($id)
+    public function store(SiswaRequest $request): JsonResponse
+    {
+        $siswa = Siswa::create($request->validated());
+
+        return response()->json([
+            'message' => 'Data siswa berhasil ditambahkan.',
+            'data' => $siswa,
+        ], 201);
+    }
+
+    public function update(SiswaRequest $request,int $id): JsonResponse 
     {
         $siswa = Siswa::find($id);
 
-        if (!$siswa){
+        if (!$siswa) {
             return response()->json([
-                'massage' => 'Data siswa tidak di temukan'
-            ],404);
+                'message' => 'Data siswa tidak ditemukan.',
+            ], 404);
+        }
+
+        $siswa->update($request->validated());
+
+        return response()->json([
+            'message' => 'Data siswa berhasil diubah.',
+            'data' => $siswa->fresh(),
+        ], 200);
+    }
+
+    public function destroy(int $id): JsonResponse
+    {
+        $siswa = Siswa::find($id);
+
+        if (!$siswa) {
+            return response()->json([
+                'message' => 'Data siswa tidak ditemukan.',
+            ], 404);
         }
 
         $siswa->delete();
 
         return response()->json([
-            'massage' => 'Data siswa berhasil di hapus'
+            'message' => 'Data siswa berhasil dihapus.',
         ], 200);
     }
 }

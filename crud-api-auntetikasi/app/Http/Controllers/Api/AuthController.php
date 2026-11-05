@@ -3,56 +3,50 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\AuthRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(AuthRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|confirmed',
-            'name_siswa' => 'required|string',
-            'nilai' => 'required|integer|min:0|max:100'
-        ]);
+        $validated = $request->validated();
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' =>$request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $siswa = $user->siswa()->create([
-            'name_siswa' => $request->name_siswa,
-            'nilai' => $request->nilai
-        ]);
-
-        $token = $user->createToken('api-token')->plainTextToken;
+        $user = DB::transaction(function () use ($validated) {
+            return User::create([
+                'username' => $validated['username'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
+        });
 
         return response()->json([
             'message' => 'Register berhasil',
-            'user' => $user,
-            'siswa' => $siswa,
-            'token' =>$token
-        ],201);
+            'data' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'email' => $user->email,
+            ],
+        ], 201);
     }
 
-    public function login(Request $request)
+    public function login(AuthRequest $request)
     {
 
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        $validated = $request->validated();
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $validated['email'])->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check(
+                $validated['password'],
+                $user->password
+            )
+        ) {
             return response()->json([
-                'message' => 'Email atau password salah'
+                'message' => 'Email atau password salah.',
             ], 401);
         }
 
@@ -60,17 +54,21 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Login berhasil',
-            'data' => $user,
-            'token' => $token
+            'data' => [
+                'id' => $user->id,
+                'username' => $user->username,
+                'email' => $user->email,
+            ],
+            'token' => $token,
         ], 200);
     }
 
-    public function logout (Request $request)
+    public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Logout Berhasil',
-        ],200);
+        ], 200);
     }
 }

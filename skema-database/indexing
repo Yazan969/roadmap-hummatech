@@ -1,4 +1,18 @@
+CREATE INDEX idx_siswa_nama
+ON siswa(nama);
+
+SHOW INDEX FROM siswa;
+
+CREATE INDEX idx_siswa_kelas_nilai
+ON siswa(kelas_id, nilai);
+
 SELECT nama, nilai
 FROM siswa
 WHERE kelas_id = 1
   AND nilai >= 80;
+
+EXPLAIN
+SELECT nama, nilai
+FROM siswa
+WHERE kelas_id = 1
+AND nilai >= 80;

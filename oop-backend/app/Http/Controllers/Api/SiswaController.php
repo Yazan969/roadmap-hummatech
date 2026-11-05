@@ -24,7 +24,6 @@ class SiswaController extends Controller
         );
     }
 
-    // Mengambil satu siswa berdasarkan ID
     public function show(int $id)
     {
         $siswa = $this->handler->getSiswaById($id);
@@ -39,13 +38,13 @@ class SiswaController extends Controller
     {
         $data = $request->validated();
 
-        $siswa = $this->service->tambahSiswa($data);
+        $siswa = $this->handler->tambahSiswa($data);
 
         return response()->json([
             'message' => 'Data siswa berhasil ditambahkan.',
             'data' => $siswa,
             'status' => $this->service->tentukanStatus(
-                (int) $siswa->nilai
+                $siswa->nilai
             ),
         ], 201);
     }
@@ -55,13 +54,13 @@ class SiswaController extends Controller
     {
         $data = $request->validated();
 
-        $siswa = $this->service->updateSiswa($id, $data);
+        $siswa = $this->handler->updateSiswa($id, $data);
 
         return response()->json([
             'message' => 'Data siswa berhasil diperbarui.',
             'data' => $siswa,
             'status' => $this->service->tentukanStatus(
-                (int) $siswa->nilai
+                $siswa->nilai
             ),
         ]);
     }

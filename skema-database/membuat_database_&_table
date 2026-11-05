@@ -1,34 +1,25 @@
-CREATE DATABASE IF NOT EXISTS sekolah_sql;
+CREATE DATABASE sekolah_sql;
 USE sekolah_sql;
 
 -- Tabel kelas
 CREATE TABLE kelas (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nama_kelas VARCHAR(50) NOT NULL UNIQUE
-) ENGINE=InnoDB;
+);
 
 -- Tabel siswa
 CREATE TABLE siswa (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nis VARCHAR(20) NOT NULL UNIQUE,
     nama VARCHAR(100) NOT NULL,
-    nilai DECIMAL(5,2) NOT NULL,
-    kelas_id BIGINT UNSIGNED NOT NULL,
+    nilai INT NOT NULL,
+    kelas_id INT NOT NULL,
+
+    CONSTRAINT fk_siswa_kelas
+    FOREIGN KEY (kelas_id)
+    REFERENCES kelas(id),
 
     CONSTRAINT chk_nilai
         CHECK (nilai >= 0 AND nilai <= 100),
+);
 
-
-    CONSTRAINT fk_siswa_kelas
-        FOREIGN KEY (kelas_id)
-        REFERENCES kelas(id)
-        ON UPDATE CASCADE
-        ON DELETE RESTRICT
-) ENGINE=InnoDB;
-
--- Index tambahan untuk pencarian dan pengurutan
-CREATE INDEX idx_siswa_nama
-ON siswa(nama);
-
-CREATE INDEX idx_siswa_kelas_nilai
-ON siswa(kelas_id, nilai);

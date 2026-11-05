@@ -13,9 +13,6 @@ return new class extends Migration
     {
         Schema::create('siswa', function (Blueprint $table) {
             $table->id();
-            $table  ->foreignId('user_id')
-                    ->constrained('users')
-                    ->onDelete('cascade');
             $table->string('name_siswa');
             $table->integer('nilai');
             $table->timestamps();

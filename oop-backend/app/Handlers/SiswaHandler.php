@@ -27,6 +27,7 @@ class SiswaHandler
         return $this->repository->create($data);
     }
 
+
     public function updateSiswa(int $id, array $data)
     {
         $siswa = $this->repository->update($id, $data);
