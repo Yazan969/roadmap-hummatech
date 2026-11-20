@@ -20,6 +20,6 @@ CREATE TABLE siswa (
     REFERENCES kelas(id),
 
     CONSTRAINT chk_nilai
-        CHECK (nilai >= 0 AND nilai <= 100),
+        CHECK (nilai >= 0 AND nilai <= 100)
 );
 

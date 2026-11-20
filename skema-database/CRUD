@@ -1,6 +1,11 @@
 INSERT INTO siswa (nis, nama, nilai, kelas_id)
 VALUES ('1006', 'Fajar', 88, 1);
 
+INSERT INTO kelas (nama_kelas)
+VALUES ("XII RPL 1"),
+		("XII RPL 2"),
+        ("XII RPL 3");
+
 SELECT * FROM siswa;
 
 SELECT *
@@ -10,9 +15,26 @@ WHERE nilai >= 80;
 SELECT nama, nilai
 FROM siswa;
 
+SELECT * FROM siswa 
+WHERE nilai >= 80 
+ORDER BY nilai DESC;
+
+SELECT * FROM siswa 
+WHERE nilai >= 80 
+ORDER BY nilai ASC;
+
 UPDATE siswa
 SET nilai = 95
 WHERE nis = '1001';
 
+UPDATE siswa 
+SET status = 'Aktif' 
+WHERE nis IN ('1001', '1002', '1003');
+
+UPDATE siswa SET nilai = 32 WHERE nis = '1001';
+UPDATE siswa SET nilai = 93 WHERE nis = '1011';
+UPDATE siswa SET nilai = 11 WHERE nis = '1031';
+
+
 DELETE FROM siswa
-WHERE nis = '1006';
+WHERE nis IN ('1006','1923','12819');

@@ -23,27 +23,27 @@ for ($i = 0; $i < $jumlah; $i++) {
     $nilai = (int) readline("Nilai:  ");
     echo "\n";
 
-    $siswa[] = [
-        "nama" => $nama,
-        "nilai" => $nilai,
-    ];
+    try {
+        if ($nilai < 0 || $nilai > 100) {
+            throw new Exception("Nilai Harus Berada Di Antara 0 Dan 100");
+        }
+
+        $siswa[] = [
+            "nama" => $nama,
+            "nilai" => $nilai,
+        ];
+    } catch (Exception $e) {
+        echo "error :" . $e->getMessage();
+        $i--;
+    }
 }
 
-try {
-    if ($nilai < 0 || $nilai > 100) {
-        throw new Exception("Nilai Harus Berada Di Antara 0 Dan 100");
-    }
+echo "==== HASIL ====\n";
+foreach ($siswa as $data) {
 
+    $kategori = cek($data["nilai"]);
 
-    echo "==== HASIL ====\n";
-    foreach ($siswa as $data) {
-
-        $kategori = cek($data["nilai"]);
-
-        echo "Nama     : " . $data["nama"] . "\n";
-        echo "Nilai    : " . $data["nilai"] . "\n";
-        echo "Kategori : " . $kategori . "\n\n";
-    }
-} catch (Exception $e) {
-    echo "error :" . $e->getMessage();
+    echo "Nama     : " . $data["nama"] . "\n";
+    echo "Nilai    : " . $data["nilai"] . "\n";
+    echo "Kategori : " . $kategori . "\n\n";
 }

@@ -43,7 +43,7 @@ class SiswaController extends Controller
         ], 201);
     }
 
-    public function update(SiswaRequest $request,int $id): JsonResponse 
+    public function update(SiswaRequest $request,int $id): JsonResponse
     {
         $siswa = Siswa::find($id);
 

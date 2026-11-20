@@ -19,7 +19,13 @@ class SiswaController extends Controller
     {
         $siswa = Siswa::find($id);
 
-        return response()-> json($siswa);
+        if (!$siswa) {
+            return response()->json([
+                'message' => 'Data siswa tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json($siswa);
     }
 
     public function store(Request $request)
@@ -36,29 +42,34 @@ class SiswaController extends Controller
         ]);
 
         return response()->json([
-            'massage'=> 'Data siswa berhasil ditambahkan',
+            'message' => 'Data siswa berhasil ditambahkan',
             'data' => $siswa
         ], 201);
-        }
+    }
 
-    public function update (Request $request, $id)
+    public function update(Request $request, $id)
     {
         $siswa = Siswa::find($id);
 
         if (!$siswa) {
             return response()->json([
-                'massage' => 'Data siswa tidak ditemukan'
+                'message' => 'Data siswa tidak ditemukan'
             ], 404);
         }
 
+        $request->validate([
+            'nama' => 'required|string',
+            'nilai' => 'required|integer|min:0|max:100'
+        ]);
+
         $siswa->update([
             'nama' => $request->nama,
-            'nilai'=> $request->nilai
+            'nilai' => $request->nilai
         ]);
 
         return response()->json([
-            'massage'=> 'Data siswa berhasil di ubah',
-            'data'=> $siswa
+            'message' => 'Data siswa berhasil di ubah',
+            'data' => $siswa
         ], 200);
     }
 
@@ -66,16 +77,16 @@ class SiswaController extends Controller
     {
         $siswa = Siswa::find($id);
 
-        if (!$siswa){
+        if (!$siswa) {
             return response()->json([
-                'massage' => 'Data siswa tidak di temukan'
-            ],404);
+                'message' => 'Data siswa tidak di temukan'
+            ], 404);
         }
 
         $siswa->delete();
 
         return response()->json([
-            'massage' => 'Data siswa berhasil di hapus'
+            'message' => 'Data siswa berhasil di hapus'
         ], 200);
     }
 }
